@@ -3,6 +3,7 @@ package com.email.service.datamodel;
 import javax.persistence.*;
 
 @Entity
+@Table(schema = "public")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
