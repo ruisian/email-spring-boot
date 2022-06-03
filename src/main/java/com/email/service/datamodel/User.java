@@ -1,5 +1,8 @@
 package com.email.service.datamodel;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
@@ -11,6 +14,9 @@ public class User {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private int id;
     @NotBlank
+    @Column(unique = true)
+    private String username;
+    @NotBlank
     private String firstname;
     @NotBlank
     private String lastname;
@@ -18,14 +24,14 @@ public class User {
     @NotBlank
     private String email;
     @NotBlank
-    private String username;
-    @NotBlank
     private String password;
     @ManyToOne()
     @JoinColumn(name="role_id")
     @NotBlank
     private Role role;
-//    private Address address;
+    @OneToOne
+    @JoinColumn(name="id")
+    private Address address;
 
     public User(int id, String firstname, String lastname, LocalDate dob, String email, String username, String password, ERole role) {
         this.id = id;
@@ -69,6 +75,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 }
 

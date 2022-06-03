@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,7 +17,6 @@ public class AppController {
 
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     RoleRepository roleRepository;
 
@@ -30,8 +30,13 @@ public class AppController {
         return "Greetings from Login";
     }
 
+    @GetMapping("/users")
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
     @GetMapping("/users/{username}")
-    public Optional<User> findUser(@PathVariable String username) {
+    public User findUser(@PathVariable String username) {
         return userRepository.findByUsername(username);
     }
 

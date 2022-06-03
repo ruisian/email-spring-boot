@@ -1,7 +1,9 @@
 package com.email.service.datamodel;
 
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
+@Entity
 public class Email extends EmailEntity {
     private boolean isArchived;
     private String body;
@@ -11,6 +13,9 @@ public class Email extends EmailEntity {
 
         this.body = body;
         this.isArchived = isArchived;
+    }
+
+    public Email() {
     }
 
 
