@@ -1,5 +1,6 @@
 package com.email.service.controller;
 
+import com.email.service.datamodel.ERole;
 import com.email.service.datamodel.Role;
 import com.email.service.datamodel.User;
 import com.email.service.icd.LoginResponse;
@@ -31,16 +32,27 @@ public class AppController {
 
     @PostConstruct
     public void init() {
-        //User user = dataPopulationService.createUsers();
-        User user = dataPopulationService.newUser("ming", "xiao", LocalDate.of(2000,1,1), "xiaoming@company.com", "xiaoming", "xiaoming123");
-        if (userService.findByUserName(user.getUsername()) == null) {
-            userService.createUser(user);
+        //dataPopulationService.populateDB();
+        Role role;
+        role = dataPopulationService.newRole(ERole.Admin);
+        if (userService.findRoleByRole(role.getName()) == null) {
+            userService.createRole(role);
         }
-        user = dataPopulationService.newUser("hua", "xiao", LocalDate.of(2000,1,2), "xiaohua@company.com", "xiaohua", "xiaohua123");
-        if (userService.findByUserName(user.getUsername()) == null) {
-            userService.createUser(user);
+        role = dataPopulationService.newRole(ERole.User);
+        ERole role2 = role.getName();
+        if (userService.findRoleByRole(role.getName()) == null) {
+            userService.createRole(role);
         }
 
+        User user;
+        user = dataPopulationService.newUser("ming", "xiao", LocalDate.of(2000,1,1), "xiaoming@company.com", "xiaoming", "xiaoming123", ERole.Admin);
+        if (userService.findByUserName(user.getUsername()) == null) {
+            userService.createUser(user);
+        }
+        user = dataPopulationService.newUser("hua", "xiao", LocalDate.of(2000,1,2), "xiaohua@company.com", "xiaohua", "xiaohua123", ERole.User);
+        if (userService.findByUserName(user.getUsername()) == null) {
+            userService.createUser(user);
+        }
     }
 
 

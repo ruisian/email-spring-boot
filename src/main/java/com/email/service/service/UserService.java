@@ -1,5 +1,6 @@
 package com.email.service.service;
 
+import com.email.service.datamodel.ERole;
 import com.email.service.datamodel.Role;
 import com.email.service.datamodel.User;
 import com.email.service.repository.RoleRepository;
@@ -36,7 +37,15 @@ public class UserService {
         return roleRepository.findById(id);
     }
 
+    public Role findRoleByRole(ERole role) {
+        return roleRepository.findByName(role);
+    }
+
     public void createUser(User user) {
         User u = userRepository.save(user);
+    }
+
+    public void createRole(Role role) {
+        Role r = roleRepository.save(role);
     }
 }

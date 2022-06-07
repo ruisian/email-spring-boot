@@ -23,10 +23,10 @@ public class User {
     private String email;
     @NotBlank
     private String password;
-    @ManyToOne()
-    @JoinColumn(name="role_id")
+    //@ManyToOne()
+    @JoinColumn(name="name")
     // @NotBlank
-    private Role role;
+    private ERole role;
     @OneToOne
     @JoinColumn(name="id")
     private Address address;
@@ -39,17 +39,18 @@ public class User {
         this.email = email;
         this.username = username;
         this.password = password;
-//        this.role = role;
+        this.role = role;
         // this.address = new Address();
     }
 
-    public User(String firstname, String lastname, LocalDate dob, String email, String username, String password) {
+    public User(String firstname, String lastname, LocalDate dob, String email, String username, String password, ERole role) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.dob = dob;
         this.email = email;
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public User() {
@@ -76,7 +77,7 @@ public class User {
         return lastname;
     }
 
-    public Role getRole() {
+    public ERole getRole() {
         return role;
     }
 
