@@ -1,7 +1,5 @@
 package com.email.service.datamodel;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -27,7 +25,7 @@ public class User {
     private String password;
     @ManyToOne()
     @JoinColumn(name="role_id")
-    @NotBlank
+    // @NotBlank
     private Role role;
     @OneToOne
     @JoinColumn(name="id")
@@ -43,6 +41,15 @@ public class User {
         this.password = password;
 //        this.role = role;
         // this.address = new Address();
+    }
+
+    public User(String firstname, String lastname, LocalDate dob, String email, String username, String password) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.dob = dob;
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
     public User() {
