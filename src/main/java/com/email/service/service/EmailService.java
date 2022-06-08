@@ -33,8 +33,8 @@ public class EmailService {
         return emailRepository.findById(id);
     }
 
-    public List<EmailListData> findArchivedEmails() {
-        return emailRepository.findArchivedEmails();
+    public List<EmailListData> findArchivedEmails(String emailAddress) {
+        return emailRepository.findArchivedEmails(emailAddress);
     }
 
     public Email updateDB(Email email) {

@@ -7,7 +7,6 @@ import com.email.service.datamodel.User;
 import com.email.service.icd.EmailListData;
 import com.email.service.icd.LoginResponse;
 import com.email.service.icd.UserCredentials;
-//import com.email.service.service.DataPopulationService;
 import com.email.service.service.DataPopulationService;
 import com.email.service.service.EmailService;
 import com.email.service.service.LoginService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class AppController {
@@ -57,6 +55,10 @@ public class AppController {
             userService.createUser(user);
         }
         user = dataPopulationService.newUser("hua", "xiao", LocalDate.of(2000,1,2), "xiaohua@company.com", "xiaohua", "xiaohua123", ERole.User);
+        if (userService.findByUserName(user.getUsername()) == null) {
+            userService.createUser(user);
+        }
+        user = dataPopulationService.newUser("xing", "xiao", LocalDate.of(2000,1,3), "xiaoxing@company.com", "xiaoxing", "xiaoxing123", ERole.User);
         if (userService.findByUserName(user.getUsername()) == null) {
             userService.createUser(user);
         }
@@ -141,7 +143,7 @@ public class AppController {
     @GetMapping("/email/archive")
     public List<EmailListData> retrieveArchivedEmails() {
         if (currentUser != null) {
-            return emailService.findArchivedEmails();
+            return emailService.findArchivedEmails(currentUser.getEmail());
         } else {
             System.out.println("No user, please log in first");
         }
@@ -168,8 +170,8 @@ public class AppController {
         }
     }
 
-    @GetMapping("/roles/{id}")
-    public Optional<Role> findRole(@PathVariable int id) {
-        return userService.findRoleById(id);
-    }
+//    @GetMapping("/roles/{id}")
+//    public Optional<Role> findRole(@PathVariable int id) {
+//        return userService.findRoleById(id);
+//    }
 }

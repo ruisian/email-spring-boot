@@ -15,8 +15,8 @@ public interface EmailRepository extends JpaRepository<Email, Integer> {
     @Query(value = "select new com.email.service.icd.EmailListData(id, fromEmail, toEmail, subject) from Email where fromEmail = :fromEmail and isArchived = false")
     List<EmailListData> listSentEmails(@Param("fromEmail") String emailAddress);
 
-    @Query(value = "select new com.email.service.icd.EmailListData(id, fromEmail, toEmail, subject) from Email where isArchived = true")
-    List<EmailListData> findArchivedEmails();
+    @Query(value = "select new com.email.service.icd.EmailListData(id, fromEmail, toEmail, subject) from Email where isArchived = true and (fromEmail = :email or toEmail = :email)")
+    List<EmailListData> findArchivedEmails(@Param("email") String emailAddress);
 
     Email findById(int id);
 }
