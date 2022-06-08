@@ -1,0 +1,96 @@
+DROP TABLE "user" CASCADE;
+DROP TABLE "role" CASCADE;
+DROP TABLE "address" CASCADE;
+DROP TABLE "email" CASCADE;
+DROP TABLE "emailarchive" CASCADE;
+DROP TABLE "appointment" CASCADE;
+DROP TABLE "location" CASCADE;
+DROP SCHEMA public;
+
+CREATE SCHEMA public;
+
+CREATE TABLE public.role (
+	"id" SERIAL PRIMARY KEY,
+	"name" TEXT
+);
+
+CREATE TABLE public.user (
+	"id" SERIAL PRIMARY KEY,
+	"firstname" VARCHAR(30) NOT NULL,
+	"lastname" VARCHAR(30),
+	"dob" DATE,
+	"email" VARCHAR(30) UNIQUE,
+	"username" VARCHAR(20),
+	"password" VARCHAR(20),
+	"role_id" INT NOT NULL,
+	CONSTRAINT fk_role 
+		FOREIGN KEY (role_id)
+			REFERENCES role(id)
+);
+
+CREATE TABLE public.address (
+	"id" SERIAL PRIMARY KEY,
+	"user_id" INT NOT NULL,
+	"number" INT,
+	"city" TEXT,
+	"street" TEXT,
+	CONSTRAINT fk_user 
+		FOREIGN KEY (user_id)
+			REFERENCES "user"(id)
+);
+
+CREATE TABLE public.email (
+	"id" SERIAL PRIMARY KEY,
+	"emailfrom" TEXT NOT NULL,
+	"emailto" TEXT NOT NULL,
+	"subject" TEXT,
+	"body" TEXT,
+	"timestamp" TIMESTAMPTZ,
+	"isarchive" BOOLEAN,
+	CONSTRAINT fk_from 
+		FOREIGN KEY ("emailfrom")
+			REFERENCES "user"(email),
+	CONSTRAINT fk_to 
+		FOREIGN KEY ("emailto")
+			REFERENCES "user"(email)
+);
+
+CREATE TABLE public.emailarchive (
+	"id" SERIAL PRIMARY KEY,
+	"email_id" INT,
+	CONSTRAINT fk_email 
+		FOREIGN KEY (email_id)
+			REFERENCES email(id)
+);
+
+CREATE TABLE public.location (
+	"id" SERIAL PRIMARY KEY,
+	"name" TEXT
+);
+
+CREATE TABLE public.appointment (
+	"id" SERIAL PRIMARY KEY,
+	"emailfrom" TEXT NOT NULL,
+	"emailto" TEXT NOT NULL,
+	"subject" TEXT,
+	"timestamp" TIMESTAMPTZ,
+	"location_id" INT,
+	CONSTRAINT fk_from 
+		FOREIGN KEY ("emailfrom")
+			REFERENCES "user"(email),
+	CONSTRAINT fk_to 
+		FOREIGN KEY ("emailto")
+			REFERENCES "user"(email),
+	CONSTRAINT fk_location
+		FOREIGN KEY (location_id)
+			REFERENCES location(id)
+);
+
+INSERT INTO public.role VALUES (1, 'Admin');
+INSERT INTO public.role VALUES (2, 'User');
+INSERT INTO public.user (id, firstname, lastname, dob, email, username, password, role_id) VALUES (1, 'ming', 'xiao', '2000-01-01', 'xiaoming@company.com', 'xiaoming', 'xiaoming123', 1);
+INSERT INTO public.user (id, firstname, lastname, dob, email, username, password, role_id) VALUES (2, 'hua', 'xiao', '2000-01-02', 'xiaohua@company.com', 'xiaohua', 'xiaohua123', 2);
+INSERT INTO public.email (id, from_email, to_email, subject, body, timestamp, is_archived) VALUES (1, 'xiaoming@company.com', 'xiaohua@company.com', 'Importing meeting later', 'Hello, We need to have a meeting later.', current_timestamp, false);
+INSERT INTO public.address (user_id, number, city, street) VALUES (1, 21, 'Singapore', 'Singapore Lane');
+INSERT INTO public.address (user_id, number, city, street) VALUES (2, 4, 'Singapore', 'Chinatown Road');
+

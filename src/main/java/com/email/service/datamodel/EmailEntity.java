@@ -1,27 +1,31 @@
 package com.email.service.datamodel;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
+
+@MappedSuperclass
 public abstract class EmailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    protected int id;
+    @Column(name="from_email")
     private String from;
+    @Column(name="to_email")
     private String to;
     private String subject;
     private LocalDateTime timestamp;
 
-    public EmailEntity (int id, String from, String to, String subject, LocalDateTime timestamp) {
+    public EmailEntity (int id, String fromEmail, String toEmail, String subject, LocalDateTime timestamp) {
         this.id = id;
-        this.from = from;
-        this.to = to;
+        this.from = fromEmail;
+        this.to = toEmail;
         this.subject = subject;
         this.timestamp = timestamp;
+    }
+
+    public EmailEntity() {
+
     }
 
 
