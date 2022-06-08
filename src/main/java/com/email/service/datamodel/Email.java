@@ -1,6 +1,7 @@
 package com.email.service.datamodel;
 
 import javax.persistence.Entity;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,6 +17,11 @@ public class Email extends EmailEntity {
     }
 
     public Email() {
+    }
+
+    public Email(String from, String to, String subject, String body) {
+        super(from, to, subject);
+        this.body = body;
     }
 
 

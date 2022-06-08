@@ -1,16 +1,18 @@
 package com.email.service.controller;
 
 import com.email.service.datamodel.ERole;
+import com.email.service.datamodel.Email;
 import com.email.service.datamodel.Role;
 import com.email.service.datamodel.User;
+import com.email.service.icd.EmailListData;
 import com.email.service.icd.LoginResponse;
 import com.email.service.icd.UserCredentials;
 //import com.email.service.service.DataPopulationService;
 import com.email.service.service.DataPopulationService;
+import com.email.service.service.EmailService;
 import com.email.service.service.LoginService;
 import com.email.service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -29,6 +31,11 @@ public class AppController {
 
     @Autowired
     DataPopulationService dataPopulationService;
+
+    @Autowired
+    EmailService emailService;
+
+    User currentUser = null;
 
     @PostConstruct
     public void init() {
@@ -63,12 +70,51 @@ public class AppController {
 
     @PostMapping("/login")
     public LoginResponse login(@RequestBody UserCredentials credentials) {
-        return loginService.login(credentials);
+        LoginResponse res = loginService.login(credentials);
+        if(res.loggedIn) {
+            currentUser = userService.findByUserName(credentials.username);
+        }
+        return res;
     }
 
     @GetMapping("/users")
     public List<User> findAllUsers() {
-        return userService.findAllUsers();
+        if(currentUser.getRole().equals(ERole.Admin)) {
+            return userService.findAllUsers();
+        } else {
+            System.out.println("login fail, no access");
+            return null;
+        }
+    }
+
+    @PostMapping("/emails/send")
+    public Email sendEmail(@RequestBody Email email) {
+        if (currentUser != null) {
+            return emailService.createEmail(email, currentUser);
+        } else {
+            System.out.println("No user, please log in first");
+        }
+        return null;
+    }
+
+    @GetMapping("/emails/inbox")
+    public List<EmailListData> emailInbox() {
+        if (currentUser != null) {
+            return emailService.listEmailSubjects(currentUser.getEmail());
+        } else {
+            System.out.println("No user, please log in first");
+        }
+        return null;
+    }
+
+    @GetMapping("/emails/sent")
+    public List<EmailListData> emailsSent() {
+        if (currentUser != null) {
+            return emailService.listSentEmails(currentUser.getEmail());
+        } else {
+            System.out.println("No user, please log in first");
+        }
+        return null;
     }
 
     @GetMapping("/users/{username}")
