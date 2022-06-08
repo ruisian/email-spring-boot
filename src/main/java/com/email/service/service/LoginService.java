@@ -1,7 +1,6 @@
 package com.email.service.service;
 
 import com.email.service.datamodel.User;
-import com.email.service.icd.LoggedInUser;
 import com.email.service.icd.LoginResponse;
 import com.email.service.icd.UserCredentials;
 import com.email.service.repository.UserRepository;

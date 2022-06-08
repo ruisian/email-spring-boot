@@ -9,9 +9,14 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface EmailRepository extends JpaRepository<Email, Integer> {
-    @Query(value = "select new com.email.service.icd.EmailListData(fromEmail, toEmail, subject) from Email where toEmail = :toEmail")
+    @Query(value = "select new com.email.service.icd.EmailListData(id, fromEmail, toEmail, subject) from Email where toEmail = :toEmail and isArchived = false")
     List<EmailListData> listEmailsBySubject(@Param("toEmail") String emailAddress);
 
-    @Query(value = "select new com.email.service.icd.EmailListData(fromEmail, toEmail, subject) from Email where fromEmail = :fromEmail")
+    @Query(value = "select new com.email.service.icd.EmailListData(id, fromEmail, toEmail, subject) from Email where fromEmail = :fromEmail and isArchived = false")
     List<EmailListData> listSentEmails(@Param("fromEmail") String emailAddress);
+
+    @Query(value = "select new com.email.service.icd.EmailListData(id, fromEmail, toEmail, subject) from Email where isArchived = true")
+    List<EmailListData> findArchivedEmails();
+
+    Email findById(int id);
 }

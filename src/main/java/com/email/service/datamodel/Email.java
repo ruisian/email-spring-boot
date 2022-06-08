@@ -33,7 +33,11 @@ public class Email extends EmailEntity {
         return body;
     }
 
-    public boolean getIsArchived() {
+    public Boolean getIsArchived() {
         return isArchived;
+    }
+
+    public void setIsArchived(Boolean toArchive) {
+        this.isArchived = toArchive;
     }
 }

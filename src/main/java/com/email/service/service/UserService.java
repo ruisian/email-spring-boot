@@ -41,6 +41,10 @@ public class UserService {
         return roleRepository.findByName(role);
     }
 
+    public List<Role> findAllRoles() {
+        List<Role> role = roleRepository.findAll();
+        return role;
+    }
     public void createUser(User user) {
         User u = userRepository.save(user);
     }

@@ -29,4 +29,15 @@ public class EmailService {
         return emailRepository.listSentEmails(emailAddress);
     }
 
+    public Email findById(int id) {
+        return emailRepository.findById(id);
+    }
+
+    public List<EmailListData> findArchivedEmails() {
+        return emailRepository.findArchivedEmails();
+    }
+
+    public Email updateDB(Email email) {
+        return emailRepository.save(email);
+    }
 }

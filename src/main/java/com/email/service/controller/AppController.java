@@ -82,12 +82,12 @@ public class AppController {
         if(currentUser.getRole().equals(ERole.Admin)) {
             return userService.findAllUsers();
         } else {
-            System.out.println("login fail, no access");
+            System.out.println("not admin, no access");
             return null;
         }
     }
 
-    @PostMapping("/emails/send")
+    @PostMapping("/email/send")
     public Email sendEmail(@RequestBody Email email) {
         if (currentUser != null) {
             return emailService.createEmail(email, currentUser);
@@ -97,7 +97,7 @@ public class AppController {
         return null;
     }
 
-    @GetMapping("/emails/inbox")
+    @GetMapping("/email/inbox")
     public List<EmailListData> emailInbox() {
         if (currentUser != null) {
             return emailService.listEmailSubjects(currentUser.getEmail());
@@ -107,7 +107,7 @@ public class AppController {
         return null;
     }
 
-    @GetMapping("/emails/sent")
+    @GetMapping("/email/sent")
     public List<EmailListData> emailsSent() {
         if (currentUser != null) {
             return emailService.listSentEmails(currentUser.getEmail());
@@ -117,12 +117,58 @@ public class AppController {
         return null;
     }
 
-    @GetMapping("/users/{username}")
-    public User findUser(@PathVariable String username) {
-        return userService.findByUserName(username);
+    @GetMapping("/email/{id}")
+    public Email retrieveEmail(@PathVariable int id) {
+        if (currentUser != null) {
+            return emailService.findById(id);
+        } else {
+            System.out.println("No user, please log in first");
+        }
+        return null;
+    }
+    @PostMapping("/email/{id}")
+    public Email archiveEmail(@PathVariable int id, @RequestBody Boolean toArchive) {
+        if (currentUser != null) {
+            Email email = emailService.findById(id);
+            email.setIsArchived(toArchive);
+            return emailService.updateDB(email);
+        } else {
+            System.out.println("No user, please log in first");
+        }
+        return null;
     }
 
-    @GetMapping("/role/{id}")
+    @GetMapping("/email/archive")
+    public List<EmailListData> retrieveArchivedEmails() {
+        if (currentUser != null) {
+            return emailService.findArchivedEmails();
+        } else {
+            System.out.println("No user, please log in first");
+        }
+        return null;
+    }
+
+    @GetMapping("/users/{username}")
+    public User findUser(@PathVariable String username) {
+        if(currentUser.getRole().equals(ERole.Admin)) {
+            return userService.findByUserName(username);
+        } else {
+            System.out.println("not admin, no access");
+            return null;
+        }
+    }
+
+    @GetMapping("/roles")
+    public List<Role> listRoles() {
+        if(currentUser.getRole().equals(ERole.Admin)) {
+            return userService.findAllRoles();
+        } else {
+            System.out.println("not admin, no access");
+            return null;
+        }
+    }
+
+    @GetMapping("/roles/{id}")
     public Optional<Role> findRole(@PathVariable int id) {
         return userService.findRoleById(id);
     }
